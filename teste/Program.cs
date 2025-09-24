@@ -2,9 +2,9 @@
 
 #region ExpandoObject
 
-#region Criação Expando Principal
+#region Criação Expando
 
-dynamic expando = new ExpandoObject();
+dynamic expandoObject = new ExpandoObject();
 bool success = false;
 
 while (!success)
@@ -14,66 +14,42 @@ while (!success)
     string objectName = Console.ReadLine();
     if (objectName != null)
     {
-        expando.Name = objectName;
+        expandoObject.Name = objectName;
         success = true;
     }
 }
 
 #endregion
 
-#region Criação Expando Adicionais
+#region Escolha quantidade de propriedades
+
+int propertiesQuantity = ChoosePropertyQuantity(expandoObject);
 
 success = false;
-List<ExpandoObject> additionalExpandoObjects = new List<ExpandoObject>();
 
-while (!success)
+#endregion
+
+#region Criação propriedades Expando
+
+if (propertiesQuantity > 1)
 {
-    Console.WriteLine($"Gostaria de criar mais um objeto antes de criar as propriedades de {expando.Name}? (S/N)");
-    string result = Console.ReadLine();
-    if (result.ToLower() == "n" | result.ToLowerInvariant() == "não")
-        success = true;
-
-    if (result.ToLower() == "s" | result.ToLower() == "sim")
+    for (int i = 0; i < propertiesQuantity; i++)
     {
+        CreateProperty(expandoObject);
         Console.Clear();
-        Console.Write("Digite o nome de seu objeto: ");
-        string objectName = Console.ReadLine();
-        if (objectName != null)
-        {
-            dynamic additionalExpando = new ExpandoObject();
-            additionalExpando.Name = objectName;
-            additionalExpandoObjects.Add(additionalExpando);
-        }
+        success = false;
     }
+}
+else
+{
+    CreateProperty(expandoObject);
+    Console.Clear();
+    success = false;
 }
 
 #endregion
 
-#region Criação Propriedades Expando Adicionais
-
-success = false;
-Console.Clear();
-
-foreach (dynamic expandoObject in additionalExpandoObjects)
-{
-    #region Escolha quantidade de propriedades adicionais
-
-    int propertiesQuantity = ChoosePropertyQuantity(expandoObject);
-
-    success = false;
-
-    #endregion
-
-    if (propertiesQuantity > 1)
-    {
-        for (int i = 0; i < propertiesQuantity; i++)
-        {
-            CreateProperty(expandoObject, additionalExpandoObjects);
-            Console.Clear();
-            success = false;
-        }
-    }
-}
+#region Funções criação propriedades
 
 #region ChoosePropertyQuantity
 
@@ -103,7 +79,7 @@ static int ChoosePropertyQuantity(dynamic expandoObject)
 
 #region CreateProperty
 
-static void CreateProperty(dynamic expandoObject, List<ExpandoObject> additionalExpandoObjects)
+static void CreateProperty(dynamic expandoObject)
 {
     bool success = false;
     while (!success)
@@ -157,12 +133,12 @@ static void CreateProperty(dynamic expandoObject, List<ExpandoObject> additional
             int propertyQuantity = ChoosePropertyQuantity(expando);
 
             if (propertyQuantity > 1 | propertyQuantity < 11)
-            for (int i = 0; i < propertyQuantity; i++)
-            {
-                CreateProperty(expando, additionalExpandoObjects);
-                Console.Clear();
-                success = true;
-            }
+                for (int i = 0; i < propertyQuantity; i++)
+                {
+                    CreateProperty(expando);
+                    Console.Clear();
+                    success = true;
+                }
         }
     }
     Console.Clear();
@@ -174,18 +150,15 @@ static void CreateProperty(dynamic expandoObject, List<ExpandoObject> additional
 
 #region Print
 
-foreach (dynamic expandoObject in additionalExpandoObjects)
+foreach (var dict in (IDictionary<string, object>)expandoObject)
 {
-    var expandoDict = (IDictionary<string, object>)expandoObject;
-    foreach (var dict in expandoDict)
+    if (dict.Key == "AdditionalExpandoObject")
     {
-        if (dict.Key == "AdditionalExpandoObject")
-        {
-            PrintAdditionalExpando(expandoObject, dict.Value);
-            continue;
-        }
-        Console.WriteLine($"{expandoObject.Name}: {dict.Key} = {dict.Value}");
+        PrintAdditionalExpando(expandoObject, dict.Value);
+        continue;
     }
+    Console.WriteLine($"{expandoObject.Name}: {dict.Key} = {dict.Value}");
+
 }
 
 void PrintAdditionalExpando(dynamic expandoObject, dynamic childExpandoObject)
@@ -194,7 +167,7 @@ void PrintAdditionalExpando(dynamic expandoObject, dynamic childExpandoObject)
     {
         if (dict.Key == "AdditionalExpandoObject")
         {
-            PrintAdditionalExpando(childExpandoObject.Value, dict.Value);
+            PrintAdditionalExpando(childExpandoObject, dict.Value);
             continue;
         }
 
