@@ -1,0 +1,50 @@
+# Ignore as pastas de build
+bin/
+obj/
+
+# Ignore a pasta de configuração do Visual Studio
+.vs/
+.vscode/
+
+# Ignore arquivos de debug e profiler
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.sln.docstates
+
+# Ignore arquivos temporários do Visual Studio
+# .NET Core e ASP.NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Ignore pastas de dependências e caches de pacotes
+# NuGet
+.nuget/
+packages/
+
+# Ignore arquivos de log
+*.log
+
+# Ignore arquivos temporários de sistema operacional
+Thumbs.db
+ehthumbs.db
+
+# Ignore arquivos do MacOS
+.DS_Store
+
+# Ignore arquivos de cache de pacotes
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Ignore arquivos temporários do Rider
+.idea/
+
+# Ignore pastas geradas por ferramentas de build
+s/
+
+# Outras pastas de build que você não quer versionar
+*/bin/
+*/obj/
